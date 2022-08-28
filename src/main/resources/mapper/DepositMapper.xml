@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chengqiang.record.mapper.DepositMapper">
+	<resultMap id="DepositEntity" type="com.chengqiang.record.entity.DepositEntity" >
+		<result column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="user_id" property="userId" jdbcType="VARCHAR"/>
+		<result column="deposit_count" property="depositCount" jdbcType="INTEGER"/>
+		<result column="deposit_style" property="depositStyle" jdbcType="VARCHAR"/>
+		<result column="deposit_time" property="depositTime" jdbcType="DATE"/>
+		<result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+		<result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	<select id="getDetailById" parameterType="String" resultMap="DepositEntity">
+    	select * from deposit where id = #{depositId}
+  	</select>
+	
+	<select id="list" parameterType="String"  resultMap="DepositEntity">
+	    select * from deposit where user_id = #{userId} ORDER BY deposit_time DESC
+	</select>
+  	
+  	<insert id="saveDeposit" parameterType="com.chengqiang.record.entity.DepositEntity" useGeneratedKeys="true" keyProperty="id">
+    	INSERT INTO deposit (user_id, deposit_count, deposit_style, deposit_time, remarks, create_by, create_time, update_by, update_time, del_flag)
+        VALUES (#{userId}, #{depositCount}, #{depositStyle}, #{depositTime}, #{remarks}, #{createBy}, now(), '', now(), #{delFlag});
+  	</insert>
+
+</mapper>

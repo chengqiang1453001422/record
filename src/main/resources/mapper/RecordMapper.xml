@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chengqiang.record.mapper.RecordMapper">
+	<resultMap id="RecordEntity" type="com.chengqiang.record.entity.RecordEntity" >
+		<result column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="user_id" property="userId" jdbcType="VARCHAR"/>
+		<result column="account_type" property="accountType" jdbcType="VARCHAR"/>
+		<result column="record_type" property="recordType" jdbcType="VARCHAR"/>
+		<result column="extra_info" property="extraInfo" jdbcType="VARCHAR"/>
+		<result column="calc_value" property="calcValue" jdbcType="VARCHAR"/>
+		<result column="record_time" property="recordTime" jdbcType="DATE"/>
+		<result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	<select id="recordById" resultType="com.chengqiang.record.entity.RecordEntity">
+    	select * from record where id = #{id}
+  	</select>
+  	
+  	<select id="recordByUserIdAndYear" parameterType="String"  resultMap="RecordEntity">
+	    select * from record where user_id = #{userId} and YEAR(record_time) = YEAR(NOW())
+	</select>
+	
+	<select id="recordByUserIdAndMounth" parameterType="String"  resultMap="RecordEntity">
+	    select * from record where user_id = #{userId} and DATE_FORMAT(record_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')
+	</select>
+	
+	<select id="recordByUserId" parameterType="String"  resultMap="RecordEntity">
+	    select * from record where user_id = #{userId} and record_time BETWEEN #{startDate} and #{endDate} ORDER BY record_time DESC
+	</select>
+	
+	<select id="recordDateByUserId" parameterType="String"  resultType="String">
+	    select count(distinct record_time) recordDate from record where user_id = #{userId}
+	</select>
+	
+	<select id="recordNumberByUserId" parameterType="String"  resultType="String">
+	    select count(record_time) recordNumber from record where user_id = #{userId}
+	</select>
+  	
+  	<insert id="insertRecord" parameterType="com.chengqiang.record.entity.RecordEntity" useGeneratedKeys="true" keyProperty="id">
+    	INSERT INTO record (user_id, account_type, record_type, extra_info, calc_value, record_time, create_by, create_time, update_by, update_time, del_flag)
+        VALUES (#{userId}, #{accountType},#{recordType}, #{extraInfo}, #{calcValue}, #{recordTime}, #{createBy}, now(), '', now(), #{delFlag});
+  	</insert>
+
+</mapper>

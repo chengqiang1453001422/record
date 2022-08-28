@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chengqiang.record.mapper.UserMapper">
+
+	<select id="getUserById" resultType="com.chengqiang.record.entity.UserInfo">
+    	select * from user_info where id = #{userId}
+  	</select>
+  	
+  	<select id="getUserByUsername" resultType="com.chengqiang.record.entity.UserInfo">
+    	select * from user_info where username = #{userName}
+  	</select>
+  	
+  	<select id="getUserBeanByToken" resultType="com.chengqiang.record.entity.UserInfo">
+    	select * from user_info where token = #{token}
+  	</select>
+  	
+  	<insert id="insertUser" parameterType="com.chengqiang.record.entity.UserInfo" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO user_info (username, password, phone, age, sex, email, avatar, create_by, create_time, update_by, update_time, del_flag)
+        VALUES (#{username},#{password}, #{phone}, #{age}, #{sex}, #{email}, #{avatar}, #{createBy}, now(), '', now(), #{delFlag});
+  	</insert>
+  	
+  	<update id="updatePhotoByUserId">
+        UPDATE user_info SET avatar = #{avatar} WHERE id = #{userId};
+    </update>
+    
+    <update id="updatePasswordByEmailCode">
+        UPDATE user_info SET password = #{password}, email = #{email} WHERE username = #{username};
+    </update>
+
+</mapper>
